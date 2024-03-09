@@ -23,7 +23,10 @@ class Book(models.Model):
     pub_date = models.DateTimeField('date published')
     download_links = ArrayField(models.CharField(max_length=200))
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='static/books/images', blank=True)
+    image = models.ImageField(upload_to='books/static/books/images', blank=True)
+
+    def book_categories(self):
+        return ', '.join([i.name for i in self.categories.all()])
 
     def __str__(self):
         return self.name

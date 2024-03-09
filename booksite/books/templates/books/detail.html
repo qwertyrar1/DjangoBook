@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+</head>
+<body>
+{% load static %}
+<ul>{{ book.name }}</ul>
+<ul>{{ book.book_categories }}</ul>
+<ul>{{ book.description }}</ul>
+<ul>{{ book.download_links }}</ul>
+<ul>{{ book.author }}</ul>
+<img src="{{ book.image.url }}" alt="image" width="300" >
+</body>
+</html>
