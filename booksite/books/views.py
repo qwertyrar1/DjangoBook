@@ -78,6 +78,7 @@ def filter_feature(request):
         return render(request, 'books/index.html', {'query': filter_query,
                                                     'page_obj': page_obj,
                                                     'categories': Category.objects.all(),
+                                                    'name_of_checked': filter_query,
                                                     })
     else:
         return render(request, 'books/index.html', {})

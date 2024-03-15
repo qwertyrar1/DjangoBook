@@ -34,7 +34,11 @@
 <ul class="list-group p-2">
 {% for category in categories %}
 <li class="list-group-item" >
-        <input class="form-check-input me-1" type="checkbox" name="filter_query" value="{{ category.name }}">
+        <input class="form-check-input me-1" type="checkbox" name="filter_query" value="{{ category.name }}"
+               {% if category.name in name_of_checked %}
+               checked
+               {% endif %}
+        >
         {{ category.name }}
   </li>
 {% endfor %}
