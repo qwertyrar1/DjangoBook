@@ -1,0 +1,6 @@
+.list-group{
+    display: inline-block;
+    width: 250px;
+    max-height: 350px;
+    overflow:scroll;
+ }

@@ -26,7 +26,7 @@ class Book(models.Model):
     image = models.ImageField(upload_to='books/static/books/images', blank=True)
 
     def book_categories(self):
-        return ', '.join([i.name for i in self.categories.all()])
+        return [i.name for i in self.categories.all()]
 
     def __str__(self):
         return self.name

@@ -8,4 +8,5 @@ urlpatterns = [
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     path("author/<int:author_id>", views.author, name="author"),
     path("search/", views.search_feature, name="search-view"),
+    path("filter/", views.filter_feature, name="filter-view"),
 ]

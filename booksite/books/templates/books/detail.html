@@ -13,7 +13,11 @@
         crossorigin="anonymous"></script>
 {% load static %}
 <ul>{{ book.name }}</ul>
-<ul>{{ book.book_categories }}</ul>
+<ul>
+{% for category in book.book_categories %}
+{{ category }}
+{% endfor %}
+</ul>
 <ul>{{ book.description }}</ul>
 <ul>{% for i in book.download_links %}
     <a href="">{{ i }},</a>
