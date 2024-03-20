@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.views import generic
 from .models import Book, Author, Category
-from itertools import chain
+from .functions import search_feature_render, filter_feature_render
+from django.core.cache import cache
 
 
 class IndexView(generic.ListView):
@@ -41,45 +42,19 @@ def author(request, author_id):
 def search_feature(request):
     if request.method == 'POST':
         search_query = request.POST['search_query']
+        cache.set('temporary_query', search_query)
 
-        book_search = Book.objects.filter(name__icontains=search_query)
-        author_search_id = Author.objects.filter(fullname__icontains=search_query)
-        author_search = Book.objects.filter(author__in=author_search_id)
-        objects = list(chain(book_search, author_search))
-
-        page_number = request.GET.get("page")
-        paginator = Paginator(objects, 4)
-        page_obj = paginator.get_page(page_number)
-
-        return render(request, 'books/index.html', {'query': search_query,
-                                                    'page_obj': page_obj,
-                                                    'categories': Category.objects.all(),
-                                                    })
+        return search_feature_render(request, search_query)
     else:
-        return render(request, 'books/index.html', {})
+        return search_feature_render(request, cache.get('temporary_query'))
 
 
 def filter_feature(request):
     if request.method == 'POST':
         filter_query = request.POST.getlist('filter_query')
-        all_books = Book.objects.all()
-        category_filter = []
-        for book in all_books:
-            for category in filter_query:
-                if category not in book.book_categories():
-                    break
-            else:
-                category_filter.append(book)
+        cache.set('temporary_query', filter_query)
 
-        page_number = request.GET.get("page")
-        paginator = Paginator(category_filter, 4)
-        page_obj = paginator.get_page(page_number)
-
-        return render(request, 'books/index.html', {'query': filter_query,
-                                                    'page_obj': page_obj,
-                                                    'categories': Category.objects.all(),
-                                                    'name_of_checked': filter_query,
-                                                    })
+        return filter_feature_render(request, filter_query)
     else:
-        return render(request, 'books/index.html', {})
+        return filter_feature_render(request, cache.get('temporary_query'))
 
