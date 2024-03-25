@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator
 from django.views import generic
 from .models import Book, Author, Category
 from .functions import search_feature_render, filter_feature_render
