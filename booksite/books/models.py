@@ -16,12 +16,23 @@ class Author(models.Model):
         return self.fullname
 
 
+class File(models.Model):
+    name = models.CharField(max_length=100, default=1)
+    file_field = models.FileField(upload_to='books/static/books/files')
+
+    def __str__(self):
+        return self.name
+
+
 class Book(models.Model):
     name = models.CharField(max_length=100)
     categories = models.ManyToManyField(Category)
     description = models.CharField()
     pub_date = models.DateTimeField('date published')
-    download_links = ArrayField(models.CharField(max_length=200))
+    txt_download_link = models.OneToOneField(File, on_delete=models.CASCADE, blank=True, related_name='txt_link',
+                                             null=True, default=1)
+    rtf_download_link = models.OneToOneField(File, on_delete=models.CASCADE, blank=True, related_name='rtf_link',
+                                             null=True, default=1)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='books/static/books/images', blank=True)
 
@@ -30,4 +41,3 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
-

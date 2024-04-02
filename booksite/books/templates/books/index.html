@@ -49,7 +49,11 @@
 <div class="d-flex justify-content-end">
     {% for book in page_obj %}
         <div class="p-3 bd-highlight">
-            <a href="{% url 'books:detail' book.id %}"><img src="{{ book.image.url }}" alt="image" height="200" ></a><br>
+            <a href="{% url 'books:detail' book.id %}">
+                {% if book.image %}
+                <img src="{{ book.image.url }}" alt="image" height="200" >
+                {% endif %}
+            </a><br>
             <a href="{% url 'books:detail' book.id %}">{{ book.name }}</a><br>
             {{ book.author }}
         </div>

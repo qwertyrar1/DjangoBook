@@ -19,9 +19,9 @@
 {% endfor %}
 </ul>
 <ul>{{ book.description }}</ul>
-<ul>{% for i in book.download_links %}
-    <a href="">{{ i }},</a>
-    {% endfor %}</ul>
+<ul><a href="{% url 'books:download_file' file_id=book.txt_download_link.id %}">txt</a>,
+    <a href="{% url 'books:download_file' file_id=book.rtf_download_link.id %}">rtf</a>
+</ul>
 <ul><a href="{% url 'books:author' book.author.id %}">{{ book.author }}</a></ul>
 <img src="{{ book.image.url }}" alt="image" width="300" >
 </body>

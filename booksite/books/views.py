@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from .models import Book, Author, Category
+from .models import Book, Author, Category, File
 from .functions import search_feature_render, filter_feature_render
 from django.core.cache import cache
+from django.http import FileResponse
 
 
 class IndexView(generic.ListView):
@@ -57,3 +58,8 @@ def filter_feature(request):
     else:
         return filter_feature_render(request, cache.get('temporary_query'))
 
+
+def download_file(request, file_id):
+    file_instance = get_object_or_404(File, pk=file_id)
+    file_path = file_instance.file_field.path
+    return FileResponse(open(file_path, 'rb'), as_attachment=True)
