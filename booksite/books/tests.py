@@ -1,7 +1,7 @@
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.utils import timezone
-from .models import Book, Category, Author
+from .models import Book, Category, Author, File
 from .functions import search_feature_render, filter_feature_render
 from django.core.paginator import Paginator
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -15,6 +15,20 @@ class IndexViewTestCase(TestCase):
         self.author1 = Author.objects.create(fullname="Автор 1")
         self.author2 = Author.objects.create(fullname="Автор 2")
 
+        self.file_txt1 = File.objects.create(name="FileTxt1", file_field=SimpleUploadedFile("file1.txt",
+                                                                                            b"file_content",
+                                                                                            content_type="file/txt"))
+        self.file_txt2 = File.objects.create(name="FileTxt2", file_field=SimpleUploadedFile("file2.txt",
+                                                                                            b"file_content",
+                                                                                            content_type="file/txt"))
+
+        self.file_rtf1 = File.objects.create(name="FileRtf1", file_field=SimpleUploadedFile("file1.rtf",
+                                                                                            b"file_content",
+                                                                                            content_type="file/rtf"))
+        self.file_rtf2 = File.objects.create(name="FileRtf2", file_field=SimpleUploadedFile("file2.rtf",
+                                                                                            b"file_content",
+                                                                                            content_type="file/rtf"))
+
         image_file1 = SimpleUploadedFile("image1.jpg", b"file_content", content_type="image/jpeg")
         image_file2 = SimpleUploadedFile("image2.jpg", b"file_content", content_type="image/jpeg")
 
@@ -22,8 +36,9 @@ class IndexViewTestCase(TestCase):
             name="Книга 1",
             description="Описание книги 1",
             pub_date=timezone.now(),
+            txt_download_link=self.file_txt1,
+            rtf_download_link=self.file_rtf1,
             author=self.author1,
-            download_links=["http://example.com/book1.pdf"],
             image=image_file1
         )
         self.book1.categories.add(self.category1)
@@ -32,8 +47,9 @@ class IndexViewTestCase(TestCase):
             name="Книга 2",
             description="Описание книги 2",
             pub_date=timezone.now(),
+            txt_download_link=self.file_txt2,
+            rtf_download_link=self.file_rtf2,
             author=self.author2,
-            download_links=["http://example.com/book2.pdf"],
             image=image_file2
         )
         self.book2.categories.add(self.category2)
@@ -65,10 +81,19 @@ class FeatureRenderViewTestCase(TestCase):
         self.image_file = SimpleUploadedFile("image.jpg", b"file_content", content_type="image/jpeg")
 
         for i in range(20):
+            self.file_txt = File.objects.create(name="FileTxt1", file_field=SimpleUploadedFile(f"file{i}.txt",
+                                                                                               b"file_content",
+                                                                                               content_type="file/txt"
+                                                                                               ))
+            self.file_rtf = File.objects.create(name="FileRtf1", file_field=SimpleUploadedFile(f"file{i}.rtf",
+                                                                                               b"file_content",
+                                                                                               content_type="file/rtf"
+                                                                                               ))
             book = Book.objects.create(
                 name=f"Книга {i}",
                 description=f"Описание книги {i}",
-                download_links=["http://example.com/book.pdf"],
+                txt_download_link=self.file_txt,
+                rtf_download_link=self.file_rtf,
                 pub_date=timezone.now(),
                 author=self.author,
                 image=self.image_file,
@@ -102,7 +127,3 @@ class FeatureRenderViewTestCase(TestCase):
         self.assertNotContains(response, 'Книга 1')
 
         self.assertContains(response, 'Page 1 of 3')
-
-
-
-
